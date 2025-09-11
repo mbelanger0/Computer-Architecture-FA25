@@ -1,4 +1,4 @@
-filename = rgb_cycle
+filename = blink
 pcf_file = ../common/iceBlinkPico.pcf
 
 build:
