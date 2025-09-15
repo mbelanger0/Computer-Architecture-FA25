@@ -1,4 +1,4 @@
-filename = rgb_cycle_fsm
+filename = rgb_cycle_fsm_comb
 pcf_file = ../common/iceBlinkPico.pcf
 
 build:
