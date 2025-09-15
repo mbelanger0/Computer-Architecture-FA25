@@ -43,7 +43,6 @@ module top(
                 RGB_R = 1'b0;
                 RGB_B = 1'b1.
                 RGB_G = 1'b1;
-                current_color = RED
                 next_color = YELLOW;
                 end
 
@@ -52,7 +51,6 @@ module top(
                 RGB_R = 1'b0;
                 RGB_G = 1'b0;
                 RGB_B = 1'b1;
-                current_color = YELLOW;
                 next_color <= GREEN;
                 end
                 
@@ -62,7 +60,6 @@ module top(
                 RGB_G = 1'b0;
                 RGB_B = 1'b1;
                 next_color = CYAN;
-                current_color = GREEN;
                 end
 
                 // CYAN
@@ -70,7 +67,6 @@ module top(
                 RGB_R = 1'b1;
                 RGB_G = 1'b0;
                 RGB_B = 1'b0;
-                current_color = CYAN;
                 next_color = BLUE;
                 end
 
@@ -79,7 +75,6 @@ module top(
                 RGB_R = 1'b1;
                 RGB_G = 1'b1;
                 RGB_B = 1'b0;
-                current_color = BLUE
                 next_color = MAGENTA;
                 end
 
@@ -88,7 +83,6 @@ module top(
                 RGB_R = 1'b0;
                 RGB_G = 1'b1;
                 RGB_B = 1'b0;
-                current_color = MAGENTA;
                 next_color = RED;
                 end
             endcase
