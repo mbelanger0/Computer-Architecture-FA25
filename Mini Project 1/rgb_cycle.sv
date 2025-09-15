@@ -19,36 +19,36 @@ module top(
     always_ff @(posedge clk) begin
 
         // Yellow
-        if(count == 1 * FADE_INTERVAL-1) begin
+        if(count == 1 * FADE_INTERVAL - 1) begin
             RGB_G <= ~RGB_G;
             count <= count + 1;
         end
 
         // Green
-        else if(count == 2 * FADE_INTERVAL-1) begin
+        else if(count == 2 * FADE_INTERVAL - 1) begin
             RGB_R <= ~RGB_R;
             count <= count + 1;
         end
 
         // Cyan
-        else if(count == 3 * FADE_INTERVAL-1) begin
+        else if(count == 3 * FADE_INTERVAL - 1) begin
             RGB_B <= ~RGB_B;
             count <= count + 1;
         end
 
         // Blue
-        else if(count == 4 * FADE_INTERVAL-1) begin
+        else if(count == 4 * FADE_INTERVAL - 1) begin
             RGB_G <= ~RGB_G;
             count <= count + 1;
         end
 
         // Magenta
-        else if(count == 5 * FADE_INTERVAL-1) begin
+        else if(count == 5 * FADE_INTERVAL - 1) begin
             RGB_R <= ~RGB_R;
             count <= count + 1;
         end
 
-        else if(count == 6 * FADE_INTERVAL-1) begin
+        else if(count == 6 * FADE_INTERVAL - 1) begin
             RGB_B <= ~RGB_B;
             count <= 0;
         end
