@@ -16,9 +16,9 @@ module top(
 
     end
 
-    typedef enum {red, yellow, green, cyan, blue, magenta} colors;
+    typedef enum {RED, YELLOW, GREEN, CYAN, BLUE, MAGENTA} colors;
 
-    colors next_color = yellow;
+    colors next_color = YELLOW;
 
 
         always_ff @(posedge clk) begin
@@ -26,40 +26,52 @@ module top(
         if (count == FADE_INTERVAL - 1) begin
             case (next_color)
 
-                // Red
-                red: begin
-                RGB_B <= ~RGB_B;
-                next_color <= yellow;
+                // RED
+                RED: begin
+                RGB_R <= 1'b0;
+                RGB_B <= 1'b1.
+                RGB_G <= 1'b1;
+                next_color <= YELLOW;
                 end
 
-                // Yellow
-                yellow: begin
-                RGB_G <= ~RGB_G;
-                next_color <= green;
+                // YELLOW
+                YELLOW: begin
+                RGB_R <= 1'b0;
+                RGB_G <= 1'b0;
+                RGB_B <= 1'b1;
+                next_color <= GREEN;
                 end
                 
-                // Green
-                green: begin
-                RGB_R <= ~RGB_R;
-                next_color <= cyan;
+                // GREEN
+                GREEN: begin
+                RGB_R <= 1'b1;
+                RGB_G <= 1'b0;
+                RGB_B <= 1'b1;
+                next_color <= CYAN;
                 end
 
-                // Cyan
-                cyan: begin
-                RGB_B <= ~RGB_B;
-                next_color <= blue;
+                // CYAN
+                CYAN: begin
+                RGB_R <= 1'b1;
+                RGB_G <= 1'b0;
+                RGB_B <= 1'b0;
+                next_color <= BLUE;
                 end
 
-                // Blue
-                blue: begin
-                RGB_G <= ~RGB_G;
-                next_color <= magenta;
+                // BLUE
+                BLUE: begin                
+                RGB_R <= 1'b1;
+                RGB_G <= 1'b1;
+                RGB_B <= 1'b0;
+                next_color <= MAGENTA;
                 end
 
-                //Magenta
-                magenta: begin
-                RGB_R <= ~RGB_R;
-                next_color <= red;
+                //MAGENTA
+                MAGENTA: begin
+                RGB_R <= 1'b0;
+                RGB_G <= 1'b1;
+                RGB_B <= 1'b0;
+                next_color <= RED;
                 end
             endcase
 
