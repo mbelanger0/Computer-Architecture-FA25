@@ -29,7 +29,7 @@ module top(
                 // RED
                 RED: begin
                 RGB_R <= 1'b0;
-                RGB_B <= 1'b1.
+                RGB_B <= 1'b1;
                 RGB_G <= 1'b1;
                 next_color <= YELLOW;
                 end

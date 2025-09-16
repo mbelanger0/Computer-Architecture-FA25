@@ -8,40 +8,39 @@ module top(
     parameter FADE_INTERVAL = 2000000;
     logic [$clog2(FADE_INTERVAL) - 1:0] count = 0;
 
-    initial begin
-
-        RGB_R = 1'b0;
-        RGB_G = 1'b1;
-        RGB_B = 1'b1;
-
-    end
-
     typedef enum {RED, YELLOW, GREEN, CYAN, BLUE, MAGENTA} colors;
+    colors next_color;
+    colors current_color;
 
-    colors next_color = YELLOW;
-    colors current_color = RED;
+
+    // initial begin
+
+    //     RGB_R = 1'b1;
+    //     RGB_G = 1'b1;
+    //     RGB_B = 1'b1;
+    // end
 
 
         always_ff @(posedge clk) begin
         
         if (count == FADE_INTERVAL - 1) begin
-            current_color = next_color;
-            count = 0;
+            current_color <= next_color;
+            count <= 0;
         end
             
         else begin
-            count = count + 1;
+            count <= count + 1;
         end
 
         end
 
-        always_comb() begin
+        always_comb begin
              case (current_color)
 
                 // RED
                 RED: begin
                 RGB_R = 1'b0;
-                RGB_B = 1'b1.
+                RGB_B = 1'b1;
                 RGB_G = 1'b1;
                 next_color = YELLOW;
                 end
@@ -51,7 +50,7 @@ module top(
                 RGB_R = 1'b0;
                 RGB_G = 1'b0;
                 RGB_B = 1'b1;
-                next_color <= GREEN;
+                next_color = GREEN;
                 end
                 
                 // GREEN
@@ -84,6 +83,14 @@ module top(
                 RGB_G = 1'b1;
                 RGB_B = 1'b0;
                 next_color = RED;
+                end
+                
+                default: begin
+                    RGB_R = 1'b1;
+                    RGB_G = 1'b1;
+                    RGB_B = 1'b1;
+                    current_color = RED;
+                    next_color = YELLOW;
                 end
             endcase
         end
