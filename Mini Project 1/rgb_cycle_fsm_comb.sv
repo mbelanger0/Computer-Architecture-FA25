@@ -5,14 +5,19 @@ module top(
     output logic    RGB_B
 );
 
+    // Create variable that is 1/6th of a 12MHz clock cycle
     parameter FADE_INTERVAL = 2000000;
     logic [$clog2(FADE_INTERVAL) - 1:0] count = 0;
 
+    // Define the different color states that are possible
     typedef enum {RED, YELLOW, GREEN, CYAN, BLUE, MAGENTA} colors;
 
-    colors next_color = YELLOW;
+    // set initial and next colors for the state machine
     colors current_color = RED;
+    colors next_color = YELLOW;
 
+    // LED states are set in the combinational logic so they
+    // no longer need to be set in an initial block
 
     // initial begin
 
@@ -22,6 +27,9 @@ module top(
     // end
 
 
+        // Check if 2000000 rising edges have passed, and if so
+        // change the current/next color states. Increment counter
+        // by one if not
         always_ff @(posedge clk) begin
         
         if (count == FADE_INTERVAL - 1) begin
@@ -36,6 +44,9 @@ module top(
         end
 
         always_comb begin
+
+        // Turn on the LEDs in accordance with the current color
+        // Update the next color
              case (current_color)
 
                 // RED
