@@ -9,8 +9,9 @@ module top(
     logic [$clog2(FADE_INTERVAL) - 1:0] count = 0;
 
     typedef enum {RED, YELLOW, GREEN, CYAN, BLUE, MAGENTA} colors;
-    colors next_color;
-    colors current_color;
+
+    colors next_color = YELLOW;
+    colors current_color = RED;
 
 
     // initial begin
@@ -89,8 +90,7 @@ module top(
                     RGB_R = 1'b1;
                     RGB_G = 1'b1;
                     RGB_B = 1'b1;
-                    current_color = RED;
-                    next_color = YELLOW;
+                    next_color = RED;
                 end
             endcase
         end
