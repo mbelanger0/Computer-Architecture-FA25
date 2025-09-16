@@ -97,6 +97,9 @@ module top(
                 next_color = RED;
                 end
                 
+                // In the event that current_colors is undefined,
+                // turn off all the LEDs and set next_color to RED
+                // to restart the cycles
                 default: begin
                     RGB_R = 1'b1;
                     RGB_G = 1'b1;
