@@ -2,7 +2,7 @@
 
 ## Goal
 
-Use the iceBlinkPico FPGA dev board to change the colors of a set of RGB LEDs to cycles through 60 degree intervals of the colors on the HSV color wheel.
+Use the [iceBlinkPico](https://github.com/bminch/iceBlinkPico/) FPGA dev board to change the colors of a set of RGB LEDs to cycles through 60 degree intervals of the colors on the HSV color wheel.
 
 ## Implemnetations
 I created three different implementations
