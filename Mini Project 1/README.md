@@ -4,7 +4,7 @@
 
 Use the [iceBlinkPico](https://github.com/bminch/iceBlinkPico/) FPGA dev board to change the colors of a set of RGB LEDs to cycles through 60 degree intervals of the colors on the HSV color wheel.
 
-## Implemnetations
+## Implementations
 I created three different implementations
 
 - `rgb_cycle.sv`: uses a chain of if statements and a counter so everytime the clock cycle reaches a multiple of 2000000 (0.2x of a sec), the color changes
