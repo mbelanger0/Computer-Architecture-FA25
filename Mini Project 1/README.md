@@ -2,7 +2,7 @@
 
 ## Goal
 
-Use an FPGA to change the colors of a set of RGB LEDs to cycles through 60 degree intervals of the colors on the HSV color wheel.
+Use the iceBlinkPico FPGA dev board to change the colors of a set of RGB LEDs to cycles through 60 degree intervals of the colors on the HSV color wheel.
 
 ## Implemnetations
 I created three different implementations
@@ -12,5 +12,6 @@ I created three different implementations
 - `rgb_cycle_fsm_comb.sv`: also uses a finite state machine using the same principle but does so also using combinational logic
 
 ## Video
+`rgb_cycle_fsm_comb_demo.mp4`: The demo video shows a few LED cycles going through the six different colors. The last two seconds of the video are in slow motion so the individual colors can more clearly be seen
 
 

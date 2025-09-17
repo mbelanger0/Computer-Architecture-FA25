@@ -5,9 +5,12 @@ module top(
     output logic    RGB_B
 );
 
+    // Create variable that is 1/6th of a 12MHz clock cycle to
+    // account for 6 different colors
     parameter FADE_INTERVAL = 2000000;
     logic [$clog2(FADE_INTERVAL) - 1:0] count = 0;
 
+    // Setting initial states
     initial begin
 
         RGB_R = 1'b0;
@@ -16,11 +19,16 @@ module top(
 
     end
 
+    // Define the different color states that are possible
     typedef enum {RED, YELLOW, GREEN, CYAN, BLUE, MAGENTA} colors;
 
+    // Red initially on so next color is yellow
     colors next_color = YELLOW;
 
 
+        // Check if 2000000 rising edges have passed, and if so
+        // change the current/next color states. Increment counter
+        // by one if not
         always_ff @(posedge clk) begin
         
         if (count == FADE_INTERVAL - 1) begin

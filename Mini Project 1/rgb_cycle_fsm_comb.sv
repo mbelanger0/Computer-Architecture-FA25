@@ -5,7 +5,8 @@ module top(
     output logic    RGB_B
 );
 
-    // Create variable that is 1/6th of a 12MHz clock cycle
+    // Create variable that is 1/6th of a 12MHz clock cycle to
+    // account for 6 different colors
     parameter FADE_INTERVAL = 2000000;
     logic [$clog2(FADE_INTERVAL) - 1:0] count = 0;
 
@@ -24,6 +25,7 @@ module top(
     //     RGB_R = 1'b1;
     //     RGB_G = 1'b1;
     //     RGB_B = 1'b1;
+    //
     // end
 
 

@@ -5,9 +5,13 @@ module top(
     output logic    RGB_B
 );
 
+    // Create variable that is 1/6th of a 12MHz clock cycle to
+    // account for 6 different colors
     parameter FADE_INTERVAL = 2000000;
     logic [$clog2(6 * FADE_INTERVAL) - 1:0] count = 0;
+    
 
+    // Setting initial states
     initial begin
 
         RGB_R = 1'b0;
@@ -16,6 +20,9 @@ module top(
 
     end
 
+    // Changes states during every multiple of 2000000 in the HSV order.
+    // Increase the counter by one for every rising edge that doesn't
+    // lead to a state transition. Reset counter to 0 at 11999999.
     always_ff @(posedge clk) begin
 
         // Yellow
