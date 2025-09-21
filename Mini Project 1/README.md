@@ -7,9 +7,9 @@ Use the [iceBlinkPico](https://github.com/bminch/iceBlinkPico/) FPGA dev board t
 ## Implementations
 I created three different implementations
 
-- `rgb_cycle.sv`: uses a chain of if statements and a counter so everytime the clock cycle reaches a multiple of 2000000 (0.2x of a sec), the color changes
-- `rgb_cycle_fsm.sv`: uses a finite state machine to change the combined LED color every 2000000 clock cycles (0.2x of a sec) and uses sequential logic
-- `rgb_cycle_fsm_comb.sv`: also uses a finite state machine using the same principle but does so also using combinational logic
+- `rgb_cycle.sv`: uses a chain of if statements and a counter so every time the clock cycle reaches a multiple of 2000000 (one sixth of the 12MHz clock cycle), the color changes
+- `rgb_cycle_fsm.sv`: uses a finite state machine to change the combined LED color every 2000000 clock cycles (one sixth of the 12MHz clock cycle) and uses sequential logic
+- `rgb_cycle_fsm_comb.sv`: also uses a finite state machine using the same overall principle but does so also using combinational logic for the case statement and sequential logic for the timing
 
 ## Video
 `rgb_cycle_fsm_comb_demo.mp4`: The demo video shows a few LED cycles going through the six different colors. The last two seconds of the video are in slow motion so the individual colors can more clearly be seen
