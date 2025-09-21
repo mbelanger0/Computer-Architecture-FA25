@@ -7,8 +7,8 @@ Use the [iceBlinkPico](https://github.com/bminch/iceBlinkPico/) FPGA dev board t
 ## Implementations
 I created three different implementations
 
-- `rgb_cycle.sv`: uses a chain of if statements and a counter so every time the clock cycle reaches a multiple of 2000000 (one sixth of the 12MHz clock cycle), the color changes
-- `rgb_cycle_fsm.sv`: uses a finite state machine to change the combined LED color every 2000000 clock cycles (one sixth of the 12MHz clock cycle) and uses sequential logic
+- `rgb_cycle.sv`: uses a chain of if statements and a counter so every time 2000000 clock edges (one sixth of the 12MHz clock cycle) are counted, the combined LED color changes
+- `rgb_cycle_fsm.sv`: uses a finite state machine to change the combined LED color every 2000000 clock edges (one sixth of the 12MHz clock cycle) and uses sequential logic
 - `rgb_cycle_fsm_comb.sv`: also uses a finite state machine using the same overall principle but does so also using combinational logic for the case statement and sequential logic for the timing
 
 ## Video
