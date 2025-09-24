@@ -12,6 +12,36 @@ module top #(
     output logic    RGB_B,
 );
 
+    typedef enum {INCREMENTING, DECREMENTING, HIGH_HOLD, LOW_HOLD} states;
+
+    typedef enum {X0TO60, X60TO120, X120TO180, X180TO240, X240TO300, X300TO360} intervals;
+
+
+    states current_states = ;
+    states next_states = ;
+
+    states current_states = ;
+    states next_states = ;
+
+    states current_states = ;
+    states next_states = ;
+
+    states current_states = ;
+    states next_states = ;
+
+
+    always_ff @(posedge clk) begin
+    
+        if (count == PWM - 1) begin
+            current_color <= next_color;
+            count <= 0;
+        end
+            
+        else begin
+            count <= count + 1;
+        end
+    end
+
     logic [$clog2(PWM_INTERVAL) - 1:0] pwm_value;
     logic pwm_out;
 
