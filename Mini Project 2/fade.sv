@@ -18,15 +18,15 @@ module fade #(
     localparam OFF_HOLD = 2'b11;
 
 
-    // Declare state variables
-    logic current_state = PWM_INC;
-    logic next_state;
+    // // Declare state variables
+    // logic current_state = PWM_INC;
+    // logic next_state;
 
     // Declare variables for timing state transitions
     logic [$clog2(INC_DEC_INTERVAL) - 1:0] count = 0;
     logic [$clog2(INC_DEC_MAX) - 1:0] inc_dec_count = 0;
     logic time_to_inc_dec = 1'b0;
-    logic time_to_transition = 1'b0;
+    // logic time_to_transition = 1'b0;
 
     initial begin
         pwm_value = 0;
@@ -62,31 +62,33 @@ module fade #(
     end
 
     // Increment / Decrement / Hold PWM value as appropriate given current state
-    always_ff @(posedge time_to_inc_dec) begin
-        case (current_state)
-            PWM_INC:
-                pwm_value <= pwm_value + INC_DEC_VAL;
-            PWM_DEC:
-                pwm_value <= pwm_value - INC_DEC_VAL;
-            ON_HOLD:
-                pwm_value = PWM_INTERVAL - 1;
-            OFF_HOLD:
-                pwm_value = 0;
-        endcase
+    always_ff @(posedge clk) begin
+        if (time_to_inc_dec) begin
+            case (current_state)
+                PWM_INC:
+                    pwm_value <= pwm_value + INC_DEC_VAL;
+                PWM_DEC:
+                    pwm_value <= pwm_value - INC_DEC_VAL;
+                ON_HOLD:
+                    pwm_value = PWM_INTERVAL - 1;
+                OFF_HOLD:
+                    pwm_value = 0;
+            endcase
+        end
     end
 
     
 
-    // Implement counter for timing state transitions
-    always_ff @(posedge time_to_inc_dec) begin
-        if (inc_dec_count == INC_DEC_MAX - 1) begin
-            inc_dec_count <= 0;
-            time_to_transition <= 1'b1;
-        end
-        else begin
-            inc_dec_count <= inc_dec_count + 1;
-            time_to_transition <= 1'b0;
-        end
-    end
+    // // Implement counter for timing state transitions
+    // always_ff @(posedge time_to_inc_dec) begin
+    //     if (inc_dec_count == INC_DEC_MAX - 1) begin
+    //         inc_dec_count <= 0;
+    //         time_to_transition <= 1'b1;
+    //     end
+    //     else begin
+    //         inc_dec_count <= inc_dec_count + 1;
+    //         time_to_transition <= 1'b0;
+    //     end
+    // end
 
 endmodule
