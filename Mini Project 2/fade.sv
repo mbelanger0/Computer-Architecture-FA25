@@ -1,13 +1,13 @@
 // Fade
 
 module fade #(
-    parameter INC_DEC_INTERVAL = 12000,     // CLK frequency is 12MHz, so 12,000 cycles is 1ms
+    parameter INC_DEC_INTERVAL = 10000,     // CLK frequency is 12MHz, so 12,000 cycles is 1ms
     parameter INC_DEC_MAX = 200,            // Transition to next state after 200 increments / decrements, which is 0.2s
     parameter PWM_INTERVAL = 1200,          // CLK frequency is 12MHz, so 1,200 cycles is 100us
     parameter INC_DEC_VAL = PWM_INTERVAL / INC_DEC_MAX
 )(
-    input logic clk, 
-    input logic current_state,
+    input logic clk,
+    input logic [1:0] current_state,
     output logic [$clog2(PWM_INTERVAL) - 1:0] pwm_value
 );
 
@@ -70,9 +70,9 @@ module fade #(
                 PWM_DEC:
                     pwm_value <= pwm_value - INC_DEC_VAL;
                 ON_HOLD:
-                    pwm_value = PWM_INTERVAL - 1;
+                    pwm_value <= PWM_INTERVAL - 1;
                 OFF_HOLD:
-                    pwm_value = 0;
+                    pwm_value <= 0;
             endcase
         end
     end
