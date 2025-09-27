@@ -6,19 +6,23 @@ module fade_tb;
     parameter PWM_INTERVAL = 1200;
 
     logic clk = 0;
-    logic LED;
+    logic RGB_R;
+    logic RGB_G;
+    logic RGB_B;
 
     top # (
         .PWM_INTERVAL   (PWM_INTERVAL)
     ) u0 (
-        .clk            (clk), 
-        .LED            (LED)
+        .clk              (clk), 
+        .RGB_R            (RGB_R),
+        .RGB_G            (RGB_G),
+        .RGB_B            (RGB_B)
     );
 
     initial begin
         $dumpfile("fade.vcd");
         $dumpvars(0, fade_tb);
-        #60000000
+        #100000000
         $finish;
     end
 
