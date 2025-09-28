@@ -9,38 +9,41 @@ module top #(
     input logic     clk, 
     output logic    RGB_R,
     output logic    RGB_G,
-    output logic    RGB_B,
+    output logic    RGB_B
 );
 
-    typedef enum {INCREMENTING = 2'b00, DECREMENTING = 2'b01, HIGH_HOLD = 2'b10, LOW_HOLD = 2'b11} states;
+    // Enum of what interval each LED could be in
+    typedef enum logic[1:0] {INCREMENTING = 2'b00, DECREMENTING = 2'b01, HIGH_HOLD = 2'b10, LOW_HOLD = 2'b11} states;
 
+    // Enum of what part of the HSV cycle the LEDs could be in
     typedef enum {X0TO60, X60TO120, X120TO180, X180TO240, X240TO300, X300TO360} intervals;
 
+    // Set starting interval as the first 60 degrees of the HSV color wheel
     intervals current_interval = X0TO60;
     intervals next_interval = X60TO120;
 
-    states R_current_state; //= HIGH_HOLD;
-    states G_current_state; //= INCREMENTING;
-    states B_current_state;// = LOW_HOLD;
+    states R_current_state;
+    states G_current_state;
+    states B_current_state;
 
+    // 0.2 second variables for use in changing HSV intervals
+    parameter FADE_INTERVAL = 2000000;
+    logic [$clog2(FADE_INTERVAL) - 1:0] count = 0;
 
-        parameter FADE_INTERVAL = 2000000;
-        logic [$clog2(FADE_INTERVAL) - 1:0] count = 0;
-
-
-
-        always_ff @(posedge clk) begin
-            if (count == FADE_INTERVAL - 1) begin
-                current_interval <= next_interval;
-                count <= 0;
-            end
-                
-            else begin
-                count <= count + 1;
-            end
+    // Timer to change HSV interval every 0.2s by counting the clock cycles
+    always_ff @(posedge clk) begin
+        if (count == FADE_INTERVAL - 1) begin
+            current_interval <= next_interval;
+            count <= 0;
         end
+            
+        else begin
+            count <= count + 1;
+        end
+    end
 
-
+    // State machine to set the state of each LED in accordance to what part of the
+    // HSV color wheel the LEDs should be in
     always_comb begin
 
         case(current_interval)
@@ -89,7 +92,7 @@ module top #(
         endcase
     end
 
-
+    // Instantiating fade and pwm for each LED
     logic [$clog2(PWM_INTERVAL) - 1:0] R_pwm_value;
     logic R_pwm_out;
 
@@ -150,6 +153,7 @@ module top #(
         .pwm_out        (B_pwm_out)
     );
 
+    // Toggling the LEDs
     assign RGB_R = ~R_pwm_out;
     assign RGB_G = ~G_pwm_out;
     assign RGB_B = ~B_pwm_out;

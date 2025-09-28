@@ -1,4 +1,4 @@
-// Fade
+// Fade - Adapted from the provided face.sv example
 
 module fade #(
     parameter INC_DEC_INTERVAL = 10000,     // CLK frequency is 12MHz, so 12,000 cycles is 1ms
@@ -12,42 +12,20 @@ module fade #(
 );
 
     // Define state variable values
-    localparam PWM_INC = 2'b00;
-    localparam PWM_DEC = 2'b01;
-    localparam ON_HOLD = 2'b10;
-    localparam OFF_HOLD = 2'b11;
+    localparam PWM_INC   = 2'b00;
+    localparam PWM_DEC   = 2'b01;
+    localparam HIGH_HOLD = 2'b10;
+    localparam LOW_HOLD  = 2'b11;
 
-
-    // // Declare state variables
-    // logic current_state = PWM_INC;
-    // logic next_state;
 
     // Declare variables for timing state transitions
     logic [$clog2(INC_DEC_INTERVAL) - 1:0] count = 0;
     logic [$clog2(INC_DEC_MAX) - 1:0] inc_dec_count = 0;
     logic time_to_inc_dec = 1'b0;
-    // logic time_to_transition = 1'b0;
 
     initial begin
         pwm_value = 0;
     end
-
-    //Handle state changes in top
-
-    // // Register the next state of the FSM
-    // always_ff @(posedge time_to_transition)
-    //     current_state <= next_state;
-
-    // // Compute the next state of the FSM
-    // always_comb begin
-    //     next_state = 1'bx;
-    //     case (current_state)
-    //         PWM_INC:
-    //             next_state = PWM_DEC;
-    //         PWM_DEC:
-    //             next_state = PWM_INC;
-    //     endcase
-    // end
 
     // Implement counter for incrementing / decrementing PWM value
     always_ff @(posedge clk) begin
@@ -66,29 +44,21 @@ module fade #(
         if (time_to_inc_dec) begin
             case (current_state)
                 PWM_INC:
-                    pwm_value <= pwm_value + INC_DEC_VAL;
+                    if (pwm_value < PWM_INTERVAL - INC_DEC_VAL)
+                        pwm_value <= pwm_value + INC_DEC_VAL;
+                    else
+                        pwm_value <= PWM_INTERVAL - 1;
                 PWM_DEC:
-                    pwm_value <= pwm_value - INC_DEC_VAL;
-                ON_HOLD:
+                    if (pwm_value > INC_DEC_VAL)
+                        pwm_value <= pwm_value - INC_DEC_VAL;
+                    else
+                        pwm_value <= 0;
+                HIGH_HOLD:
                     pwm_value <= PWM_INTERVAL - 1;
-                OFF_HOLD:
+                LOW_HOLD:
                     pwm_value <= 0;
             endcase
         end
     end
-
-    
-
-    // // Implement counter for timing state transitions
-    // always_ff @(posedge time_to_inc_dec) begin
-    //     if (inc_dec_count == INC_DEC_MAX - 1) begin
-    //         inc_dec_count <= 0;
-    //         time_to_transition <= 1'b1;
-    //     end
-    //     else begin
-    //         inc_dec_count <= inc_dec_count + 1;
-    //         time_to_transition <= 1'b0;
-    //     end
-    // end
 
 endmodule
