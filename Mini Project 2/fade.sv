@@ -44,11 +44,13 @@ module fade #(
         if (time_to_inc_dec) begin
             case (current_state)
                 PWM_INC:
+                    // Check to ensure pwm_values doesn't overflow
                     if (pwm_value < PWM_INTERVAL - INC_DEC_VAL)
                         pwm_value <= pwm_value + INC_DEC_VAL;
                     else
                         pwm_value <= PWM_INTERVAL - 1;
                 PWM_DEC:
+                    // Check to ensure pwm_values doesn't overflow
                     if (pwm_value > INC_DEC_VAL)
                         pwm_value <= pwm_value - INC_DEC_VAL;
                     else

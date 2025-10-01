@@ -1,4 +1,4 @@
-// PWM generator to fade LED
+// PWM generator to fade LED - from fade example
 
 module pwm #(
     parameter PWM_INTERVAL = 1200       // CLK frequency is 12MHz, so 1,200 cycles is 100us
