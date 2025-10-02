@@ -1,13 +1,13 @@
 // Fade - Adapted from the provided face.sv example
 
 module fade #(
-    parameter INC_DEC_INTERVAL = 10000,     // CLK frequency is 12MHz, so 12,000 cycles is 1ms
+    parameter INC_DEC_INTERVAL = 10000,     // CLK frequency is 12MHz, so 10,000 cycles is 1.2ms.
     parameter INC_DEC_MAX = 200,            // Transition to next state after 200 increments / decrements, which is 0.2s
     parameter PWM_INTERVAL = 1200,          // CLK frequency is 12MHz, so 1,200 cycles is 100us
     parameter INC_DEC_VAL = PWM_INTERVAL / INC_DEC_MAX
 )(
     input logic clk,
-    input logic [1:0] current_state,
+    input logic [1:0] current_state,        // current_state input for state machine
     output logic [$clog2(PWM_INTERVAL) - 1:0] pwm_value
 );
 

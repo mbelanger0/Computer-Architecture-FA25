@@ -15,10 +15,10 @@ module top #(
     // Enum of what interval each LED could be in
     typedef enum logic[1:0] {INCREMENTING = 2'b00, DECREMENTING = 2'b01, HIGH_HOLD = 2'b10, LOW_HOLD = 2'b11} states;
 
-    // Enum of what part of the HSV cycle the LEDs could be in
+    // Enum defining sixty degree intervals of what part of the HSV cycle the LEDs could be in
     typedef enum {X0TO60, X60TO120, X120TO180, X180TO240, X240TO300, X300TO360} intervals;
 
-    // Set starting interval as the first 60 degrees of the HSV color wheel
+    // Set starting interval as the first sixty degrees of the HSV color wheel
     intervals current_interval = X0TO60;
     intervals next_interval = X60TO120;
 
