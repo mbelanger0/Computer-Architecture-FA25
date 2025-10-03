@@ -7,6 +7,7 @@ module top #(
     parameter PWM_INTERVAL = 1200       // CLK frequency is 12MHz, so 1,200 cycles is 100us
 )(
     input logic     clk, 
+    input logic     rst,
     output logic    RGB_R,
     output logic    RGB_G,
     output logic    RGB_B
@@ -30,13 +31,21 @@ module top #(
     parameter FADE_INTERVAL = 2000000;
     logic [$clog2(FADE_INTERVAL) - 1:0] count = 0;
 
-    // Timer to change HSV interval every 0.2s by counting the clock cycles
+    // Timer to change HSV interval every 0.2s by counting the clock cycles.
+    // Start with all initial conditions if rst is asserted
     always_ff @(posedge clk) begin
-        if (count == FADE_INTERVAL - 1) begin
-            current_interval <= next_interval;
+        if (rst) begin
+            current_interval <= X0TO60;
+            next_interval <= X60TO120;
+            R_current_state <= HIGH_HOLD;
+            G_current_state <= INCREMENTING;
+            B_current_state <= LOW_HOLD;
             count <= 0;
         end
-            
+        else if (count == FADE_INTERVAL - 1) begin
+            current_interval <= next_interval;
+            count <= 0;
+        end  
         else begin
             count <= count + 1;
         end
@@ -106,7 +115,8 @@ module top #(
     fade #(
         .PWM_INTERVAL   (PWM_INTERVAL)
     ) R_u1 (
-        .clk            (clk), 
+        .clk            (clk),
+        .rst            (rst),
         .current_state  (R_current_state),
         .pwm_value      (R_pwm_value)
     );
@@ -124,6 +134,7 @@ module top #(
         .PWM_INTERVAL   (PWM_INTERVAL)
     ) G_u1 (
         .clk            (clk), 
+        .rst            (rst),
         .current_state  (G_current_state),
         .pwm_value      (G_pwm_value)
     );
@@ -141,6 +152,7 @@ module top #(
         .PWM_INTERVAL   (PWM_INTERVAL)
     ) B_u1 (
         .clk            (clk), 
+        .rst            (rst),
         .current_state  (B_current_state),
         .pwm_value      (B_pwm_value)
     );

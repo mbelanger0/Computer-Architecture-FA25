@@ -7,6 +7,7 @@ module fade #(
     parameter INC_DEC_VAL = PWM_INTERVAL / INC_DEC_MAX
 )(
     input logic clk,
+    input logic rst,
     input logic [1:0] current_state,        // current_state input for state machine
     output logic [$clog2(PWM_INTERVAL) - 1:0] pwm_value
 );
@@ -20,15 +21,18 @@ module fade #(
 
     // Declare variables for timing state transitions
     logic [$clog2(INC_DEC_INTERVAL) - 1:0] count = 0;
-    logic [$clog2(INC_DEC_MAX) - 1:0] inc_dec_count = 0;
     logic time_to_inc_dec = 1'b0;
 
-    initial begin
-        pwm_value = 0;
-    end
+    // initial begin
+    //     pwm_value = 0;
+    // end
 
     // Implement counter for incrementing / decrementing PWM value
     always_ff @(posedge clk) begin
+        if (rst) begin
+            count <= 0;
+            time_to_inc_dec <= 1'b0;
+        end
         if (count == INC_DEC_INTERVAL - 1) begin
             count <= 0;
             time_to_inc_dec <= 1'b1;
@@ -41,7 +45,10 @@ module fade #(
 
     // Increment / Decrement / Hold PWM value as appropriate given current state
     always_ff @(posedge clk) begin
-        if (time_to_inc_dec) begin
+        if (rst) begin
+            pwm_value <= 0;
+        end
+        else if (time_to_inc_dec) begin
             case (current_state)
                 PWM_INC:
                     // Check to ensure pwm_values doesn't overflow
