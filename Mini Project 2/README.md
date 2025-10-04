@@ -5,7 +5,7 @@ The goal of Mini Project 2 is to to drive the RGB LEDs on the [iceBlinkPico](htt
 My implementation is adapted from the [fade](https://github.com/bminch/iceBlinkPico/tree/main/examples/fade) example for the iceBlinkPico. As with the example, the main implementation contains three files:
 - `top.sv` - adapted from example
 - `fade.sv` - adapted from example
-- `pwm.sv` - unchanged from example
+- `pwm.sv` - adapted from example with minor change
 
 ### `fade.sv`
 The fade module controls the brightness of an LED by generating a PWM value that changes over time. It uses two counters: one to determine when to update the brightness (`INC_DEC_INTERVAL`), and another to track the number of steps in a fade cycle (`INC_DEC_MAX`). These are from the iceBlinkPico `fade` example and are largely unchanged Different from the example, this module responds to a 2-bit `current_state` input which selects one of four behaviors:

@@ -21,7 +21,13 @@ module pwm #(
         end
     end
 
-    // Generate PWM output signal
-    assign pwm_out = (pwm_count > pwm_value) ? 1'b0 : 1'b1;
+    // Generate PWM output signal - make sure pwm_out stays 0 when pwm_value is 0
+    always_comb
+        if (pwm_value == 0) begin
+            pwm_out = 1'b0;
+        end
+        else begin
+            pwm_out = (pwm_count > pwm_value) ? 1'b0 : 1'b1;
+        end
 
 endmodule
