@@ -3,9 +3,9 @@ The goal of Mini Project 2 is to to drive the RGB LEDs on the [iceBlinkPico](htt
 
 ## Implementation
 My implementation is adapted from the [fade](https://github.com/bminch/iceBlinkPico/tree/main/examples/fade) example for the iceBlinkPico. As with the example, the main implementation contains three files:
-- `top.sv` - adapted from example
 - `fade.sv` - adapted from example
 - `pwm.sv` - adapted from example with minor change
+- `top.sv` - adapted from example
 
 ### `fade.sv`
 The fade module controls the brightness of an LED by generating a PWM value that changes over time. It uses two counters: one to determine when to update the brightness (`INC_DEC_INTERVAL`), and another to track the number of steps in a fade cycle (`INC_DEC_MAX`). These are from the iceBlinkPico `fade` example and are largely unchanged Different from the example, this module responds to a 2-bit `current_state` input which selects one of four behaviors:
@@ -18,6 +18,9 @@ The fade module controls the brightness of an LED by generating a PWM value that
 Rather than being handled in this module like the example, state transitions are handled in `top.sv`. This allows for easier control of all the states of all the LEDs at once.
 
 The step size for each increment or decrement is set by `INC_DEC_VAL`, calculated from the total PWM range and the number of steps. The module updates the PWM value only at intervals defined by the counters. This allows for precise control over fade timing and brightness levels making it suitable for smooth color mixing.
+
+### `pwm.sv`
+The `pwm` module required one change to fit my implementation. With the original logic of the module, the `pwm_out` signal can go high for one clock cycle when `pwm_value` is 0. This would cause the LED to pulse when it should be steady on. The pulsing is vast enough (on the order of nanoseconds) that it is not visually noticeable but it was apparent in the simulations. This was foxed by checking if `pwm_value` is 0 and if it is, forcing `pwm_out` to low, and otherwise the original logic is used.
 
 ### `top.sv`
 The `top` module coordinates the color fading of the RGB LEDs by cycling through intervals on the HSV color wheel. It uses two enums: one for the current state of each LED (incrementing, decrementing, high hold, low hold), and one for the current interval of the HSV cycle (six segments, each representing 60 degrees).
