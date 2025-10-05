@@ -20,9 +20,9 @@ Rather than being handled in this module like the example, state transitions are
 The step size for each increment or decrement is set by `INC_DEC_VAL`, calculated from the total PWM range and the number of steps. The module updates the PWM value only at intervals defined by the counters. This allows for precise control over fade timing and brightness levels making it suitable for smooth color mixing.
 
 ### `pwm.sv`
-The `pwm` module required one change to fit my implementation. With the original logic of the module, the `pwm_out` signal can go high for one clock cycle when `pwm_value` is 0. This would cause the LED to pulse when it should be steady on. The pulsing is vast enough (on the order of nanoseconds) that it is not visually noticeable but it was apparent in the simulations. This was foxed by checking if `pwm_value` is 0 and if it is, forcing `pwm_out` to low, and otherwise the original logic is used.
-
-### `top.sv`
+The `pwm` module example required one change to fit my implementation. With the original logic of the module, the `pwm_out` signal can go high for one clock cycle when `pwm_value` is 0 ( since `0 > 0` would evaluate to `0`). This would cause the LED to pulse when it should be steady on. The pulsing is fast enough (on the order of nanoseconds) that it is not visually noticeable but it was apparent in the simulations. This was fixed by checking if `pwm_value` is 0 and if it is, forcing `pwm_out` to low, and otherwise the original logic (`pwm_out = (pwm_count > pwm_value) ? 1'b0 : 1'b1;`) is used.
+`
+###` `top.sv`
 The `top` module coordinates the color fading of the RGB LEDs by cycling through intervals on the HSV color wheel. It uses two enums: one for the current state of each LED (incrementing, decrementing, high hold, low hold), and one for the current interval of the HSV cycle (six segments, each representing 60 degrees).
 
 A timer counts clock cycles to determine when to advance to the next HSV interval (every 0.2 seconds). For each interval, a combinational state machine sets the state of the red, green, and blue LEDs, controlling whether each channel is fading up, fading down, held high, or held low. This mapping creates smooth color transitions as the module cycles through the HSV wheel. The state machine also sets the next HSV interval.
