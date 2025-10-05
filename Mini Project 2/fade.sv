@@ -22,9 +22,6 @@ module fade #(
     logic [$clog2(INC_DEC_INTERVAL) - 1:0] count = 0;
     logic time_to_inc_dec = 1'b0;
 
-    // initial begin
-    //     pwm_value = 0;
-    // end
 
     // Implement counter for incrementing / decrementing PWM value
     always_ff @(posedge clk) begin
