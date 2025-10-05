@@ -38,3 +38,6 @@ The below simulation results show the changing duty cycle of for each LED. It cr
 
 ## Video
 The video `rgb_fade.mp4` shows several cycles of the LEDs fading and shows colors across the HSV spectrum.
+
+## Report
+This README but in a PDF file
