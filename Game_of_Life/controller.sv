@@ -4,7 +4,8 @@ module controller (
     output logic load_sreg, 
     output logic transmit_pixel, 
     output logic [5:0] pixel, 
-    output logic [4:0] frame
+    output logic [4:0] frame,
+    output logic idle
 );
 
     localparam TRANSMIT_FRAME       = 1'b0;
@@ -104,5 +105,7 @@ module controller (
 
     assign load_sreg = (transmit_phase == LOAD_SREG);
     assign transmit_pixel = (transmit_phase == TRANSMIT_PIXEL);
+
+    assign idle = (state == IDLE);
 
 endmodule
