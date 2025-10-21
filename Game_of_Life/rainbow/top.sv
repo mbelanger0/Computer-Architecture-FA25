@@ -9,7 +9,6 @@ module top(
     output logic _45a
 );
 
-    // logic [7:0] data_reg_R, data_reg_G;//, data_reg_B;
     logic [7:0] data_reg_G;
 
     logic [5:0] pixel;
@@ -27,15 +26,11 @@ module top(
 
     assign address = { frame, pixel };
 
-    // logic [7:0] frame_buffer_R [0:63];
     logic [7:0] frame_buffer_G [0:63];
-    // logic [7:0] frame_buffer_B [0:63];
 
     always_ff @(posedge clk) begin
         if (load_sreg) begin
-            // data_reg_R <= frame_buffer_R[address];
             data_reg_G <= frame_buffer_G[address];
-            // data_reg_B <= frame_buffer_B[address];
         end
     end
 
@@ -60,25 +55,16 @@ module top(
 
     localparam logic [7:0] BRIGHTNESS = 8'h05;
 
-    logic [63:0] frame_bits_G;//, frame_bits_G;//, frame_bits_B;
-    logic [63:0] next_bits_G;//, next_bits_G;//, next_bits_B;
+    logic [63:0] frame_bits_G;
+    logic [63:0] next_bits_G;
 
     logic auto_update_sig = 1'b0;
 
     always_comb begin
         for (int i = 0; i < 64; i++) begin
-            // frame_bits_R[i] = frame_buffer_R[i];
             frame_bits_G[i] = frame_buffer_G[i];
-            // frame_bits_B[i] = frame_buffer_B[i];
         end
     end
-
-    //     game_of_life u_gol_R (
-    //     .clk            (clk),
-    //     .update         (auto_update_sig),
-    //     .current_bits   (frame_bits_R),
-    //     .next_bits      (next_bits_R)
-    // );
 
         game_of_life u_gol_G (
         .clk            (clk),
@@ -87,37 +73,18 @@ module top(
         .next_bits      (next_bits_G)
     );
 
-    // game_of_life u_gol_B (
-    //     .clk            (clk),
-    //     .update         (auto_update_sig),
-    //     .current_bits   (frame_bits_B),
-    //     .next_bits      (next_bits_B)
-    // );
-
     initial begin
         for (int i = 0; i < 64; i++) begin
-            // frame_buffer_R[i] = 8'h00;
             frame_buffer_G[i] = 8'h00;
-            // frame_buffer_B[i] = 8'h00;
         end
 
         // Glider pattern positions
         // (1,2), (2,3), (3,1),(3,2),(3,3)
-        // frame_buffer_R[1*8 + 2] = BRIGHTNESS;
-        // frame_buffer_R[2*8 + 3] = BRIGHTNESS;
-        // frame_buffer_R[3*8 + 1] = BRIGHTNESS;
-        // frame_buffer_R[3*8 + 2] = BRIGHTNESS;
-        // frame_buffer_R[3*8 + 3] = BRIGHTNESS;
-
         frame_buffer_G[1*8 + 2] = BRIGHTNESS;
         frame_buffer_G[2*8 + 3] = BRIGHTNESS;
         frame_buffer_G[3*8 + 1] = BRIGHTNESS;
         frame_buffer_G[3*8 + 2] = BRIGHTNESS;
         frame_buffer_G[3*8 + 3] = BRIGHTNESS;
-        
-        // frame_buffer_B[3*8 + 3] = BRIGHTNESS;
-        // frame_buffer_B[4*8 + 3] = BRIGHTNESS;
-        // frame_buffer_B[5*8 + 3] = BRIGHTNESS;
     end
 
     // initial begin
@@ -142,6 +109,7 @@ module top(
                 copy_counter <= 0;
                 auto_update_sig <= 1'b1;
                 update_pending <= 1'b1;
+                current_color = next_color;
             end else begin
                 copy_counter <= copy_counter + 1;
                 auto_update_sig <= 1'b0;
@@ -160,25 +128,37 @@ module top(
         end
     end
 
-    typedef enum {RED, GREEN, BLUE} colors;
+    typedef enum {RED, YELLOW, GREEN, CYAN, BLUE, MAGENTA} colors;
 
     colors current_color = GREEN;
+    colors next_color = CYAN;
 
     always_ff @(posedge clk) begin
         if (load_sreg) begin
             case (current_color)
-                GREEN: begin
-                    shift_reg <= { data_reg_G, 8'd0, 8'd0 };
-                    current_color = RED;
-                end
                 RED: begin
                     shift_reg <= { 8'd0, data_reg_G, 8'd0 };
-                    current_color = BLUE;
-
+                    next_color = YELLOW;
+                end
+                YELLOW: begin
+                shift_reg <= { data_reg_G, data_reg_G, 8'd0 };
+                    next_color = GREEN;  
+                end
+                GREEN: begin
+                    shift_reg <= { data_reg_G, 8'd0, 8'd0 };
+                    next_color = CYAN;
+                end
+                CYAN: begin
+                    shift_reg <= { data_reg_G, 8'd0, data_reg_G };
+                    next_color = BLUE;
                 end
                 BLUE: begin
                     shift_reg <= { 8'd0, 8'd0, data_reg_G };
-                    current_color = GREEN;
+                    next_color = MAGENTA;
+                end
+                MAGENTA: begin
+                    shift_reg <= { 8'd0, data_reg_G, data_reg_G };
+                    next_color = RED;
                 end
             endcase
         end
