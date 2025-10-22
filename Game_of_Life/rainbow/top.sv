@@ -73,19 +73,19 @@ module top(
         .next_bits      (next_bits_G)
     );
 
-    initial begin
-        for (int i = 0; i < 64; i++) begin
-            frame_buffer_G[i] = 8'h00;
-        end
+    // initial begin
+    //     for (int i = 0; i < 64; i++) begin
+    //         frame_buffer_G[i] = 8'h00;
+    //     end
 
-        // Glider pattern positions
-        // (1,2), (2,3), (3,1),(3,2),(3,3)
-        frame_buffer_G[1*8 + 2] = BRIGHTNESS;
-        frame_buffer_G[2*8 + 3] = BRIGHTNESS;
-        frame_buffer_G[3*8 + 1] = BRIGHTNESS;
-        frame_buffer_G[3*8 + 2] = BRIGHTNESS;
-        frame_buffer_G[3*8 + 3] = BRIGHTNESS;
-    end
+    //     // Glider pattern positions
+    //     // (1,2), (2,3), (3,1),(3,2),(3,3)
+    //     frame_buffer_G[1*8 + 2] = BRIGHTNESS;
+    //     frame_buffer_G[2*8 + 3] = BRIGHTNESS;
+    //     frame_buffer_G[3*8 + 1] = BRIGHTNESS;
+    //     frame_buffer_G[3*8 + 2] = BRIGHTNESS;
+    //     frame_buffer_G[3*8 + 3] = BRIGHTNESS;
+    // end
 
     // initial begin
     //     for (int i = 0; i < 64; i++) begin
@@ -96,6 +96,44 @@ module top(
     //     frame_buffer[4*8 + 3] = BRIGHTNESS;
     //     frame_buffer[5*8 + 3] = BRIGHTNESS;
     // end
+
+
+    // initial begin
+    //     for (int i = 0; i < 64; i++) frame_buffer_G[i] = 8'h00;
+    //     // top and bottom rows
+    //     for (int x = 0; x < 8; x++) begin
+    //         frame_buffer_G[x*8 + 0] = BRIGHTNESS;
+    //         frame_buffer_G[x*8 + 7] = BRIGHTNESS;
+    //     end
+    //     // left and right columns
+    //     for (int y = 1; y < 7; y++) begin
+    //         frame_buffer_G[0*8 + y] = BRIGHTNESS;
+    //         frame_buffer_G[7*8 + y] = BRIGHTNESS;
+    //     end
+    // end
+
+    // initial begin
+    //     for (int i = 0; i < 64; i++) frame_buffer_G[i] = 8'h00;
+    //     frame_buffer_G[1*8 + 2] = BRIGHTNESS;
+    //     frame_buffer_G[2*8 + 2] = BRIGHTNESS;
+    //     frame_buffer_G[1*8 + 3] = BRIGHTNESS;
+    //     frame_buffer_G[2*8 + 3] = BRIGHTNESS;
+    //     frame_buffer_G[5*8 + 2] = BRIGHTNESS;
+    //     frame_buffer_G[6*8 + 3] = BRIGHTNESS;
+    //     frame_buffer_G[6*8 + 4] = BRIGHTNESS;
+    // end
+
+    // Beehive
+    initial begin
+        for (int i = 0; i < 64; i++) frame_buffer_G[i] = 8'h00;
+        // coordinates (2,3),(3,2),(4,2),(5,3),(4,4),(3,4)
+        frame_buffer_G[2*8 + 3] = BRIGHTNESS;
+        frame_buffer_G[3*8 + 2] = BRIGHTNESS;
+        frame_buffer_G[4*8 + 2] = BRIGHTNESS;
+        frame_buffer_G[5*8 + 3] = BRIGHTNESS;
+        frame_buffer_G[4*8 + 4] = BRIGHTNESS;
+        frame_buffer_G[3*8 + 4] = BRIGHTNESS;
+    end
 
 
     logic [$clog2(clock_rate) - 1:0] copy_counter = 0;
