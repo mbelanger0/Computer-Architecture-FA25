@@ -15,4 +15,5 @@ clean:
 sim:
 	iverilog -g2012 -o $(filename) $(filename)_tb.sv
 	vvp $(filename)
+	unset GTK_PATH
 	gtkwave $(filename)_tb.vcd

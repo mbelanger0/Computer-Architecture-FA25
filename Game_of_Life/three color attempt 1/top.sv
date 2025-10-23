@@ -101,13 +101,13 @@ module top(
             frame_buffer_B[i] = 8'h00;
         end
 
-        // Glider pattern positions
-        // (1,2), (2,3), (3,1),(3,2),(3,3)
-        frame_buffer_R[1*8 + 2] = BRIGHTNESS;
+
         frame_buffer_R[2*8 + 3] = BRIGHTNESS;
-        frame_buffer_R[3*8 + 1] = BRIGHTNESS;
         frame_buffer_R[3*8 + 2] = BRIGHTNESS;
-        frame_buffer_R[3*8 + 3] = BRIGHTNESS;
+        frame_buffer_R[4*8 + 2] = BRIGHTNESS;
+        frame_buffer_R[5*8 + 3] = BRIGHTNESS;
+        frame_buffer_R[4*8 + 4] = BRIGHTNESS;
+        frame_buffer_R[3*8 + 4] = BRIGHTNESS;
 
         frame_buffer_G[1*8 + 2] = BRIGHTNESS;
         frame_buffer_G[2*8 + 3] = BRIGHTNESS;
