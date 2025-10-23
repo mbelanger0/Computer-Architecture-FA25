@@ -2,3 +2,6 @@
 *.bin
 *.json
 *.vcd
+*.log
+other
+top

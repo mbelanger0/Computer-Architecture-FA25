@@ -71,8 +71,11 @@ Some success could be seen in simulation. Looking at each channels `next_bits`. 
 ![](assets/three_colors_2.png)
 
 ## `rainbow`
-In the interest of still exploring using the RGB to create an interesting effect, I decided to explore having the LEDs cycle through the HSV color wheel similar to how we did in the previous projects. This implementation uses almost the same framework as thr `top` in the `single color` implementation but now has a state machine that takes a `current_color` variable that sends colors to the color channels in accordance to whatever color the current state is. The colors cycle through the HSV color wheel every second. The new color applied in accordance to when new data is send to the grid after a color change.
+In the interest of still exploring using the RGB to create an interesting effect, I decided to explore having the LEDs cycle through the HSV color wheel similar to how we did in the previous projects. This implementation uses almost the same framework as thr `top` in the `single color` implementation but now has a state machine that takes a `current_color` variable that sends colors to the color channels in accordance to whatever color the current state is. The colors cycle through the HSV color wheel every second. The new color applied in accordance to when new data is send to the grid after a color change. The color change and updates do not perfectly align but having the time between color changes being longer makes it less stobed and more apparent to they eye.
 
 ### Simulation Results
+This example also shows the glider pattern as it moves along grid. The color changes can also be seen. These color changes happen in 200ms intervals
+![](assets/rainbow_1.png)
+
 
 ### Video of `rainbow` Implementation

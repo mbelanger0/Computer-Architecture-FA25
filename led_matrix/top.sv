@@ -73,46 +73,46 @@ module top(
         .frame          (frame)
     );
 
-    // ***LEDs flashing for testing and debugging***
+    // // ***LEDs flashing for testing and debugging***
     
-    parameter FLASH_INTERVAL = 6000000;
-    logic [$clog2(FLASH_INTERVAL) - 1:0] count = 0;
-    logic flash_on = 1'b0;
-
-    always_ff @(posedge clk) begin
-        if (count == FLASH_INTERVAL - 1) begin
-            count <= 0;
-            flash_on <= ~flash_on;
-        end else begin
-            count <= count + 1;
-        end
-
-        if (load_sreg) begin
-            shift_reg <= flash_on ? 24'h080808 : 24'h000000;
-        end else if (shift) begin
-            shift_reg <= { shift_reg[22:0], 1'b0 };
-        end
-    end
-            
-    
+    // parameter FLASH_INTERVAL = 6000000;
+    // logic [$clog2(FLASH_INTERVAL) - 1:0] count = 0;
+    // logic flash_on = 1'b0;
 
     // always_ff @(posedge clk) begin
-    //     if (load_sreg) begin
-    //         unique case ({ SW, BOOT })
-    //             2'b00:
-    //                 shift_reg <= { green_data, 16'd0 };
-    //             2'b01:
-    //                 shift_reg <= { 8'd0, red_data, 8'd0 };
-    //             2'b10:
-    //                 shift_reg <= { 16'd0, blue_data };
-    //             2'b11:
-    //                 shift_reg <= { green_data, red_data, blue_data };
-    //         endcase
+    //     if (count == FLASH_INTERVAL - 1) begin
+    //         count <= 0;
+    //         flash_on <= ~flash_on;
+    //     end else begin
+    //         count <= count + 1;
     //     end
-    //     else if (shift) begin
+
+    //     if (load_sreg) begin
+    //         shift_reg <= flash_on ? 24'h080808 : 24'h000000;
+    //     end else if (shift) begin
     //         shift_reg <= { shift_reg[22:0], 1'b0 };
     //     end
     // end
+            
+    
+
+    always_ff @(posedge clk) begin
+        if (load_sreg) begin
+            unique case ({ SW, BOOT })
+                2'b00:
+                    shift_reg <= { green_data, 16'd0 };
+                2'b01:
+                    shift_reg <= { 8'd0, red_data, 8'd0 };
+                2'b10:
+                    shift_reg <= { 16'd0, blue_data };
+                2'b11:
+                    shift_reg <= { green_data, red_data, blue_data };
+            endcase
+        end
+        else if (shift) begin
+            shift_reg <= { shift_reg[22:0], 1'b0 };
+        end
+    end
 
     assign _48b = ws2812b_out;
     assign _45a = ~ws2812b_out;
