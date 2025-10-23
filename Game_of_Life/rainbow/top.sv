@@ -9,7 +9,7 @@ module top(
     output logic _45a
 );
 
-    logic [7:0] data_reg_G;
+    logic [7:0] data_reg;
 
     logic [5:0] pixel;
     logic [4:0] frame;
@@ -26,11 +26,11 @@ module top(
 
     assign address = { frame, pixel };
 
-    logic [7:0] frame_buffer_G [0:63];
+    logic [7:0] frame_buffer [0:63];
 
     always_ff @(posedge clk) begin
         if (load_sreg) begin
-            data_reg_G <= frame_buffer_G[address];
+            data_reg <= frame_buffer[address];
         end
     end
 
@@ -55,37 +55,37 @@ module top(
 
     localparam logic [7:0] BRIGHTNESS = 8'h05;
 
-    logic [63:0] frame_bits_G;
-    logic [63:0] next_bits_G;
+    logic [63:0] frame_bits;
+    logic [63:0] next_bits;
 
     logic auto_update_sig = 1'b0;
 
     always_comb begin
         for (int i = 0; i < 64; i++) begin
-            frame_bits_G[i] = frame_buffer_G[i];
+            frame_bits[i] = frame_buffer[i];
         end
     end
 
         game_of_life u_gol_G (
         .clk            (clk),
         .update         (auto_update_sig),
-        .current_bits   (frame_bits_G),
-        .next_bits      (next_bits_G)
+        .current_bits   (frame_bits),
+        .next_bits      (next_bits)
     );
 
-    // initial begin
-    //     for (int i = 0; i < 64; i++) begin
-    //         frame_buffer_G[i] = 8'h00;
-    //     end
+    initial begin
+        for (int i = 0; i < 64; i++) begin
+            frame_buffer[i] = 8'h00;
+        end
 
-    //     // Glider pattern positions
-    //     // (1,2), (2,3), (3,1),(3,2),(3,3)
-    //     frame_buffer_G[1*8 + 2] = BRIGHTNESS;
-    //     frame_buffer_G[2*8 + 3] = BRIGHTNESS;
-    //     frame_buffer_G[3*8 + 1] = BRIGHTNESS;
-    //     frame_buffer_G[3*8 + 2] = BRIGHTNESS;
-    //     frame_buffer_G[3*8 + 3] = BRIGHTNESS;
-    // end
+        // Glider pattern positions
+        // (1,2), (2,3), (3,1),(3,2),(3,3)
+        frame_buffer[1*8 + 2] = BRIGHTNESS;
+        frame_buffer[2*8 + 3] = BRIGHTNESS;
+        frame_buffer[3*8 + 1] = BRIGHTNESS;
+        frame_buffer[3*8 + 2] = BRIGHTNESS;
+        frame_buffer[3*8 + 3] = BRIGHTNESS;
+    end
 
     // initial begin
     //     for (int i = 0; i < 64; i++) begin
@@ -99,41 +99,41 @@ module top(
 
 
     // initial begin
-    //     for (int i = 0; i < 64; i++) frame_buffer_G[i] = 8'h00;
+    //     for (int i = 0; i < 64; i++) frame_buffer[i] = 8'h00;
     //     // top and bottom rows
     //     for (int x = 0; x < 8; x++) begin
-    //         frame_buffer_G[x*8 + 0] = BRIGHTNESS;
-    //         frame_buffer_G[x*8 + 7] = BRIGHTNESS;
+    //         frame_buffer[x*8 + 0] = BRIGHTNESS;
+    //         frame_buffer[x*8 + 7] = BRIGHTNESS;
     //     end
     //     // left and right columns
     //     for (int y = 1; y < 7; y++) begin
-    //         frame_buffer_G[0*8 + y] = BRIGHTNESS;
-    //         frame_buffer_G[7*8 + y] = BRIGHTNESS;
+    //         frame_buffer[0*8 + y] = BRIGHTNESS;
+    //         frame_buffer[7*8 + y] = BRIGHTNESS;
     //     end
     // end
 
     // initial begin
-    //     for (int i = 0; i < 64; i++) frame_buffer_G[i] = 8'h00;
-    //     frame_buffer_G[1*8 + 2] = BRIGHTNESS;
-    //     frame_buffer_G[2*8 + 2] = BRIGHTNESS;
-    //     frame_buffer_G[1*8 + 3] = BRIGHTNESS;
-    //     frame_buffer_G[2*8 + 3] = BRIGHTNESS;
-    //     frame_buffer_G[5*8 + 2] = BRIGHTNESS;
-    //     frame_buffer_G[6*8 + 3] = BRIGHTNESS;
-    //     frame_buffer_G[6*8 + 4] = BRIGHTNESS;
+    //     for (int i = 0; i < 64; i++) frame_buffer[i] = 8'h00;
+    //     frame_buffer[1*8 + 2] = BRIGHTNESS;
+    //     frame_buffer[2*8 + 2] = BRIGHTNESS;
+    //     frame_buffer[1*8 + 3] = BRIGHTNESS;
+    //     frame_buffer[2*8 + 3] = BRIGHTNESS;
+    //     frame_buffer[5*8 + 2] = BRIGHTNESS;
+    //     frame_buffer[6*8 + 3] = BRIGHTNESS;
+    //     frame_buffer[6*8 + 4] = BRIGHTNESS;
     // end
 
-    // Beehive
-    initial begin
-        for (int i = 0; i < 64; i++) frame_buffer_G[i] = 8'h00;
-        // coordinates (2,3),(3,2),(4,2),(5,3),(4,4),(3,4)
-        frame_buffer_G[2*8 + 3] = BRIGHTNESS;
-        frame_buffer_G[3*8 + 2] = BRIGHTNESS;
-        frame_buffer_G[4*8 + 2] = BRIGHTNESS;
-        frame_buffer_G[5*8 + 3] = BRIGHTNESS;
-        frame_buffer_G[4*8 + 4] = BRIGHTNESS;
-        frame_buffer_G[3*8 + 4] = BRIGHTNESS;
-    end
+    // // Beehive
+    // initial begin
+    //     for (int i = 0; i < 64; i++) frame_buffer[i] = 8'h00;
+    //     // coordinates (2,3),(3,2),(4,2),(5,3),(4,4),(3,4)
+    //     frame_buffer[2*8 + 3] = BRIGHTNESS;
+    //     frame_buffer[3*8 + 2] = BRIGHTNESS;
+    //     frame_buffer[4*8 + 2] = BRIGHTNESS;
+    //     frame_buffer[5*8 + 3] = BRIGHTNESS;
+    //     frame_buffer[4*8 + 4] = BRIGHTNESS;
+    //     frame_buffer[3*8 + 4] = BRIGHTNESS;
+    // end
 
 
     logic [$clog2(clock_rate) - 1:0] copy_counter = 0;
@@ -147,7 +147,7 @@ module top(
                 copy_counter <= 0;
                 auto_update_sig <= 1'b1;
                 update_pending <= 1'b1;
-                current_color = next_color;
+                // current_color = next_color;
             end else begin
                 copy_counter <= copy_counter + 1;
                 auto_update_sig <= 1'b0;
@@ -159,9 +159,7 @@ module top(
         if (update_pending && ctrl_idle) begin
             update_pending <= 1'b0;
             for (int i = 0; i < 64; i++) begin
-                // frame_buffer_R[i] <= next_bits_R[i] ? BRIGHTNESS : 8'h00;
-                frame_buffer_G[i] <= next_bits_G[i] ? BRIGHTNESS : 8'h00;
-                // frame_buffer_B[i] <= next_bits_B[i] ? BRIGHTNESS : 8'h00;
+                frame_buffer[i] <= next_bits[i] ? BRIGHTNESS : 8'h00;
             end
         end
     end
@@ -171,31 +169,44 @@ module top(
     colors current_color = GREEN;
     colors next_color = CYAN;
 
+    logic [$clog2(clock_rate) - 1:0] color_counter = 0;
+    localparam COLOR_INTERVAL = 2000000;
+
+    always_ff @(posedge clk) begin
+        if (color_counter == COLOR_INTERVAL - 1) begin
+            color_counter = 0;
+            current_color <= next_color;
+        end 
+        else begin
+            color_counter = color_counter + 1;
+        end
+    end
+
     always_ff @(posedge clk) begin
         if (load_sreg) begin
             case (current_color)
                 RED: begin
-                    shift_reg <= { 8'd0, data_reg_G, 8'd0 };
+                    shift_reg <= { 8'd0, data_reg, 8'd0 };
                     next_color = YELLOW;
                 end
                 YELLOW: begin
-                shift_reg <= { data_reg_G, data_reg_G, 8'd0 };
+                shift_reg <= { data_reg, data_reg, 8'd0 };
                     next_color = GREEN;  
                 end
                 GREEN: begin
-                    shift_reg <= { data_reg_G, 8'd0, 8'd0 };
+                    shift_reg <= { data_reg, 8'd0, 8'd0 };
                     next_color = CYAN;
                 end
                 CYAN: begin
-                    shift_reg <= { data_reg_G, 8'd0, data_reg_G };
+                    shift_reg <= { data_reg, 8'd0, data_reg };
                     next_color = BLUE;
                 end
                 BLUE: begin
-                    shift_reg <= { 8'd0, 8'd0, data_reg_G };
+                    shift_reg <= { 8'd0, 8'd0, data_reg };
                     next_color = MAGENTA;
                 end
                 MAGENTA: begin
-                    shift_reg <= { 8'd0, data_reg_G, data_reg_G };
+                    shift_reg <= { 8'd0, data_reg, data_reg };
                     next_color = RED;
                 end
             endcase

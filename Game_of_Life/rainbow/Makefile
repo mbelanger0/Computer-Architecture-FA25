@@ -13,7 +13,7 @@ clean:
 	rm -rf $(filename).blif $(filename).asc $(filename).json $(filename).bin
 
 sim:
-	iverilog -g2012 -o $(filename) $(filename)_tb.sv
-	vvp $(filename)
+	iverilog -g2012 -o "../$(filename)" "../$(filename)_tb.sv"
+	vvp "../$(filename)"
 	unset GTK_PATH
-	gtkwave $(filename)_tb.vcd
+	gtkwave "../$(filename)_tb.vcd"
