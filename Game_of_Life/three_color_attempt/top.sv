@@ -120,16 +120,6 @@ module top(
         frame_buffer_B[5*8 + 3] = BRIGHTNESS;
     end
 
-    // initial begin
-    //     for (int i = 0; i < 64; i++) begin
-    //         frame_buffer[i] = 8'h00;
-    //     end
-    //     // center vertical blinker at (3,3),(4,3),(5,3)
-    //     frame_buffer[3*8 + 3] = BRIGHTNESS;
-    //     frame_buffer[4*8 + 3] = BRIGHTNESS;
-    //     frame_buffer[5*8 + 3] = BRIGHTNESS;
-    // end
-
 
     logic [$clog2(clock_rate) - 1:0] copy_counter = 0;
 
