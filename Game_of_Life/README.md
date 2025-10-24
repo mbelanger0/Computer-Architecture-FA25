@@ -60,7 +60,7 @@ The `next_bits` logic is the best signal to analyze in the simulation since it s
 ![](assets/single_color_450_700.png)
 
 ### Video of `single color` Implementation
-
+The glider pattern can be seen moving across the grid on the green color channel.
 
 
 ## `three color attempt 1`
