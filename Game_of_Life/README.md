@@ -20,6 +20,7 @@ The design combines a Game of Life cellular automaton engine with a WS2812 LED d
 **Purpose:** Computes the next generation of an 8×8 Conway's Game of Life grid with wrap-around topology given the current state of the cells.
 
 **Algorithm:**
+
 The algorithms use several nested `for` loops and `if` statements to check and count the alive neighbors of each cell. This implementation is very resource intensive and created problems for me when I tried to implement three games at once. Modular division is used to account for wrap around effects. The overall design is simple and allows everything to happen during one rising edge when its time to update the board but doing it on one clock edge required a lot of logic devices. A better implementation may be to allow the game states to be calculated and stored over several clock edges. 
 
 The module takes the clock, an update signal, and the current state of the game as inputs and the output is the next state of the game that will them be displayed on the grid. The output is a binary 1 for alive cells and 0 for dead cell which then is used to set the brightness and colors of the LEDs once piped into `top`
@@ -71,11 +72,12 @@ Some success could be seen in simulation. Looking at each channels `next_bits`. 
 ![](assets/three_colors_2.png)
 
 ## `rainbow`
-In the interest of still exploring using the RGB to create an interesting effect, I decided to explore having the LEDs cycle through the HSV color wheel similar to how we did in the previous projects. This implementation uses almost the same framework as thr `top` in the `single color` implementation but now has a state machine that takes a `current_color` variable that sends colors to the color channels in accordance to whatever color the current state is. The colors cycle through the HSV color wheel every second. The new color applied in accordance to when new data is send to the grid after a color change. The color change and updates do not perfectly align but having the time between color changes being longer makes it less stobed and more apparent to they eye.
+In the interest of still exploring using the RGB to create an interesting effect, I decided to explore having the LEDs cycle through the HSV color wheel similar to how we did in the previous projects. This implementation uses almost the same framework as thr `top` in the `single color` implementation but now has a state machine that takes a `current_color` variable that sends colors to the color channels in accordance to whatever color the current state is. The colors cycle through the HSV color wheel every second. The new color applied in accordance to when new data is send to the grid after a color change. The color change and updates do not perfectly align but having the time between color changes being longer makes it less strobe and more apparent to they eye.
 
 ### Simulation Results
 This example also shows the glider pattern as it moves along grid. The color changes can also be seen. These color changes happen in 200ms intervals
 ![](assets/rainbow_1.png)
 
 
-### Video of `rainbow` Implementation
+### `rainbow.mp4` - Video of `rainbow` Implementation
+The video shows several seconds of the glider pattern traversing across the grid. The colors continuously change across the HSV color wheel as the glider movies.
