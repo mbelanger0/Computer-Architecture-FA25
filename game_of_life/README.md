@@ -37,7 +37,7 @@ The module takes the clock, an update signal, and the current state of the game 
 **Purpose:** Top-level integration bringing together all components control logic and Game of Life updates.
 
 **Game of Life Integration:**
-`top` uses a timer and counter `copy_counter` to determine when the `game_of_life` module should update. Once the counter reaches the `AUTO_UPDATE` value, update signals are turned true, and assuming the controller is in an update state and not processing or sending data, data can be written to a buffer which then is fed into a data register variable for the grid.
+`top` uses a timer and counter `copy_counter` to determine when the `game_of_life` module should update. Once the counter reaches the `AUTO_UPDATE` value, update signals are turned true, and assuming the controller is in an update state and not processing or sending data, data can be written to a buffer which then is fed into a data register variable for the LED grid.
 
 **Data Flow:**
 1. Controller specifies which pixel to send via `pixel[5:0]`
@@ -48,7 +48,7 @@ The module takes the clock, an update signal, and the current state of the game 
 6. During idle, if an update is pending, frame buffer is updated from Game of Life results
 
 
-## `single color`
+## `single_color`
 This module uses the above described steps and plays the game on the green color channel. This was the base case that I used as a proof of concept of the implementation. I set the starting pattern in `top` and the game plays successfully on the grid.
 
 ### Simulation Results
@@ -58,11 +58,11 @@ The `next_bits` logic is the best signal to analyze in the simulation since it s
 ![](assets/single_color_200_400.png)
 ![](assets/single_color_450_700.png)
 
-### Video of `single color` Implementation
+### Video of `single_color` Implementation
 `/single_color/single_color.mp4`: The glider pattern can be seen moving across the grid on the green color channel.
 
 
-## `three color attempt 1`
+## `three_color_attempt`
 My original plan was to have three different games playing at once on the LED grid, one on each color channel. I adapted my single color implementation and duplicated the necessary components (`frame_buffer`, `next_bits`, `data_reg`, etc) so each color channel could keep track of its own state. In order for this to work with my implementation, I needed to instantiate three `game_of_life` modules which is where I ran into problems. Upon doing so and trying to compile it, an error was thrown because it required more logic components than the ice FPGA has available. This implementation required over 270% of the available resources which meant it was impossible to upload to the iceBlinkPico and test. The problem is tied to how resource intensive my `game_of_life` module is. It uses the nested `for` loops and `if` statements
 
 ### Simulation Results
