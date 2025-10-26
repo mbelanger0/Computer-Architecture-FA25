@@ -1,4 +1,3 @@
-`include "memory.sv"
 `include "ws2812b.sv"
 `include "controller.sv"
 `include "game_of_life.sv"
@@ -34,6 +33,7 @@ module top(
         end
     end
 
+    // LED driver instantiation
     ws2812b u_ws (
         .clk                (clk),
         .serial_in          (shift_reg[23]),
@@ -42,6 +42,7 @@ module top(
         .shift              (shift)
     );
 
+    // Controller instantiation
     controller u_ctrl (
         .clk                (clk),
         .load_sreg          (load_sreg),
@@ -51,22 +52,31 @@ module top(
         .idle               (ctrl_idle)
     );
 
+    // Update cell alive/dead states every 800,000 clock cycles
     localparam UPDATE_CYCLES = 800000;
 
+    // Reduced brightness because the LEDs are blindingly bright
+    // at full brightness  
     localparam logic [7:0] BRIGHTNESS = 8'h05;
 
+    // Storage for current and next state of cells
     logic [63:0] frame_bits;
     logic [63:0] next_bits;
 
+    // Logic to signal game_of_life module to compute the next
+    // iteration of the game
     logic auto_update_sig = 1'b0;
 
+    // Continuously load the frame butter with the current state of
+    // the game
     always_comb begin
         for (int i = 0; i < 64; i++) begin
             frame_bits[i] = frame_buffer[i];
         end
     end
 
-        game_of_life u_gol_G (
+    // Game instantiation
+    game_of_life u_gol_G (
         .clk            (clk),
         .update         (auto_update_sig),
         .current_bits   (frame_bits),
@@ -74,9 +84,12 @@ module top(
     );
 
     initial begin
+        // Fill the frame buffer with zeros initially
         for (int i = 0; i < 64; i++) begin
             frame_buffer[i] = 8'h00;
         end
+
+        // Set the starting pattern
 
         // Glider pattern positions
         // (1,2), (2,3), (3,1),(3,2),(3,3)
@@ -135,9 +148,8 @@ module top(
     //     frame_buffer[3*8 + 4] = BRIGHTNESS;
     // end
 
-
+    // Counter for sending game update signals
     logic [$clog2(clock_rate) - 1:0] copy_counter = 0;
-
 
     logic update_pending = 1'b0;
 
@@ -147,7 +159,6 @@ module top(
                 copy_counter <= 0;
                 auto_update_sig <= 1'b1;
                 update_pending <= 1'b1;
-                // current_color = next_color;
             end else begin
                 copy_counter <= copy_counter + 1;
                 auto_update_sig <= 1'b0;
@@ -164,11 +175,13 @@ module top(
         end
     end
 
+    // Enum of the different HSV color wheel colors
     typedef enum {RED, YELLOW, GREEN, CYAN, BLUE, MAGENTA} colors;
 
     colors current_color = GREEN;
     colors next_color = CYAN;
 
+    // Counter for changing color every 2000000 clock edges (0.16s)
     logic [$clog2(clock_rate) - 1:0] color_counter = 0;
     localparam COLOR_INTERVAL = 2000000;
 
@@ -184,6 +197,9 @@ module top(
 
     always_ff @(posedge clk) begin
         if (load_sreg) begin
+
+            //State machine for sending color data according to the current color
+            // Follows HSV color wheel in 60 degree increments
             case (current_color)
                 RED: begin
                     shift_reg <= { 8'd0, data_reg, 8'd0 };

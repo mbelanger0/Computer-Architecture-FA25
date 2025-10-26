@@ -1,4 +1,3 @@
-`include "memory.sv"
 `include "ws2812b.sv"
 `include "controller.sv"
 `include "game_of_life.sv"
@@ -10,7 +9,6 @@ module top(
 );
 
     logic [7:0] data_reg_R, data_reg_G, data_reg_B;
-    // logic [7:0] data_reg_G;
 
     logic [5:0] pixel;
     logic [4:0] frame;
@@ -31,6 +29,7 @@ module top(
     logic [7:0] frame_buffer_G [0:63];
     logic [7:0] frame_buffer_B [0:63];
 
+    
     always_ff @(posedge clk) begin
         if (load_sreg) begin
             data_reg_R <= frame_buffer_R[address];
@@ -39,6 +38,7 @@ module top(
         end
     end
 
+    // LED driver instantiation
     ws2812b u_ws (
         .clk                (clk),
         .serial_in          (shift_reg[23]),
@@ -47,6 +47,7 @@ module top(
         .shift              (shift)
     );
 
+    // Controller instantiation
     controller u_ctrl (
         .clk                (clk),
         .load_sreg          (load_sreg),
@@ -56,15 +57,23 @@ module top(
         .idle               (ctrl_idle)
     );
 
+    // Update cell alive/dead states every 800,000 clock cycles
     localparam UPDATE_CYCLES = 800000;
 
+    // Reduced brightness because the LEDs are blindingly bright
+    // at full brightness 
     localparam logic [7:0] BRIGHTNESS = 8'h05;
 
+    // Storage for current and next state of cells for each color channel
     logic [63:0] frame_bits_R, frame_bits_G, frame_bits_B;
     logic [63:0] next_bits_R, next_bits_G, next_bits_B;
 
+    // Logic to signal game_of_life module to compute the next
+    // iteration of the game
     logic auto_update_sig = 1'b0;
 
+    // Continuously load the frame butter for each color channel
+    // with the current state of the game
     always_comb begin
         for (int i = 0; i < 64; i++) begin
             frame_bits_R[i] = frame_buffer_R[i];
@@ -73,20 +82,23 @@ module top(
         end
     end
 
-        game_of_life u_gol_R (
+    // Game instantiation for red channel
+    game_of_life u_gol_R (
         .clk            (clk),
         .update         (auto_update_sig),
         .current_bits   (frame_bits_R),
         .next_bits      (next_bits_R)
     );
 
-        game_of_life u_gol_G (
+    // Game instantiation for green channel
+    game_of_life u_gol_G (
         .clk            (clk),
         .update         (auto_update_sig),
         .current_bits   (frame_bits_G),
         .next_bits      (next_bits_G)
     );
 
+    // Game instantiation for blue channel
     game_of_life u_gol_B (
         .clk            (clk),
         .update         (auto_update_sig),
@@ -101,7 +113,7 @@ module top(
             frame_buffer_B[i] = 8'h00;
         end
 
-
+        // Beehive - Red channel
         frame_buffer_R[2*8 + 3] = BRIGHTNESS;
         frame_buffer_R[3*8 + 2] = BRIGHTNESS;
         frame_buffer_R[4*8 + 2] = BRIGHTNESS;
@@ -109,18 +121,21 @@ module top(
         frame_buffer_R[4*8 + 4] = BRIGHTNESS;
         frame_buffer_R[3*8 + 4] = BRIGHTNESS;
 
+        // Glider - Green channel
         frame_buffer_G[1*8 + 2] = BRIGHTNESS;
         frame_buffer_G[2*8 + 3] = BRIGHTNESS;
         frame_buffer_G[3*8 + 1] = BRIGHTNESS;
         frame_buffer_G[3*8 + 2] = BRIGHTNESS;
         frame_buffer_G[3*8 + 3] = BRIGHTNESS;
         
+        // Cross - Blue channel
         frame_buffer_B[3*8 + 3] = BRIGHTNESS;
         frame_buffer_B[4*8 + 3] = BRIGHTNESS;
         frame_buffer_B[5*8 + 3] = BRIGHTNESS;
     end
 
 
+    // Counter for sending game update signals
     logic [$clog2(clock_rate) - 1:0] copy_counter = 0;
 
 
@@ -140,6 +155,9 @@ module top(
             auto_update_sig <= 1'b0;
         end
 
+        // Only fill the frame buffer with the next game state
+        // if the update signals is sent and if the controller
+        // is in an idle state
         if (update_pending && ctrl_idle) begin
             update_pending <= 1'b0;
             for (int i = 0; i < 64; i++) begin
@@ -150,8 +168,10 @@ module top(
         end
     end
 
+    
     always_ff @(posedge clk) begin
         if (load_sreg) begin
+            // Send the data for all three color channels
             shift_reg <= { data_reg_G, data_reg_R, data_reg_B };
         end
         else if (shift) begin
