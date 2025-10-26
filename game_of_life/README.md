@@ -7,6 +7,8 @@ The three implementations are as follows and are in their respective directories
 - `rainbow`: plays a single game on the LED grid but cycles the LED colors through the HSV color wheel as the game is played
 - `three_color_attempt`: an attempt at getting three games to play at once, one on each color channel. This one did not turn out in hardware.
 
+`report.pdf` contain this README in pdf form.
+
 ## Architecture Overview
 
 The design combines a Game of Life cellular automaton engine with a WS2812 LED driver and top level control logic to play the game on the LED grid.
@@ -25,11 +27,6 @@ The algorithms use several nested `for` loops and `if` statements to iterate thr
 
 The module takes the clock, an update signal, and the current state of the game as inputs and the output is the next state of the game that will them be displayed on the grid. The output is a binary 1 for alive cells and 0 for dead cell which then is used to set the brightness and colors of the LEDs once piped into `top`.
 
-
-### `memory.sv`
-**Purpose:** Synchronous ROM/RAM with optional hex file initialization (not used in this project). This is identical to the module in the `led_matrix` example.
-
-
 ### `ws2812b.sv`
 **Purpose:** Generates WS2812-compatible bit waveforms with precise timing control. This is identical to the module in the `led_matrix` example.
 
@@ -37,7 +34,7 @@ The module takes the clock, an update signal, and the current state of the game 
 **Purpose:** Top-level integration bringing together all components control logic and Game of Life updates.
 
 **Game of Life Integration:**
-`top` uses a timer and counter `copy_counter` to determine when the `game_of_life` module should update. Once the counter reaches the `AUTO_UPDATE` value, update signals are turned true, and assuming the controller is in an update state and not processing or sending data, data can be written to a buffer which then is fed into a data register variable for the LED grid.
+`top` uses a timer and counter `copy_counter` to determine when the `game_of_life` module should update. Once the counter reaches the `AUTO_UPDATE` value, update signals are turned true, and assuming the controller is in an idle state and not processing or sending data, data can be written to a buffer which then is fed into a data register variable for the LED grid.
 
 **Data Flow:**
 1. Controller specifies which pixel to send via `pixel[5:0]`
